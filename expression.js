@@ -7,6 +7,7 @@ var isChange = false;
 var emojiChange = false;
 var emojiArr = [];
 
+var currentchoosenExpression= "";
 $(document).ready(function(){
   //hide emoji-page-dot-wrap
   $('.emoji-page-dot-wrap').hide();
@@ -54,15 +55,17 @@ $(document).ready(function(){
 
   });
 
-
-
   //emoji dot changed
   $('.emoji-page-dot').click(function (e) {
     var pageNum = $(this).attr('data-id');
+
     emojiChange = pageNum==0? false:true;
+		if (isEmojiTab) {
+			emojiChange = true;
+		}
     produceEmoji(pageNum,emojiChange);
   });
-
+	
 });
 
 function produceEmoji(pageNum,isChange) {
@@ -73,7 +76,6 @@ function produceEmoji(pageNum,isChange) {
 
   if (isChange) { //说明是在特定选项卡中切换,基本cell 结构已经创建
     var currentShowedEmojiArr = document.getElementsByClassName('expression-cell');
-    console.log("len:"+ currentShowedEmojiArr.length);
 
     Array.prototype.forEach.call(currentShowedEmojiArr,function(element,index){
       element.innerHTML = '';
@@ -101,6 +103,12 @@ function produceEmoji(pageNum,isChange) {
       span.css("top",y);
       ++cnt;
       cell_wrap.append(span);
+			//获取表情编码
+			$(span).click(function(e){
+				currentchoosenExpression = $(this).text();
+				//console.log(currentchoosenExpression);
+			});
+
     }
     console.log(cnt);
     $(".expression-body").append(cell_wrap);
@@ -133,7 +141,7 @@ function produceQQ(pageNum,isChange) {
     if (isChange) return;
     for (var i = start; i < end; i++) {
       var span = $("<span class='expression-cell'></span>");
-      var img = $("<img class='expression-img' src='resources/qq/Expression_"+(i+1)+"'>")
+      var img = $("<img class='expression-img' src='resources/qq/Expression_"+(i+1)+".png'>")
       span.append(img);
       //在这里设置span的position
       var x = (i % 11) * 36 ;
@@ -142,7 +150,13 @@ function produceQQ(pageNum,isChange) {
 
       span.css("left",x);
       span.css("top",y);
-
+			
+			$(span).click(function () {
+				var imgSrc = $(this).children().attr('src');
+				console.log(imgSrc);
+				currentchoosenExpression = changeToExpressionSerialNumber(imgSrc);
+				//console.log(currentchoosenExpression);
+			});
       cell_wrap.append(span);
 
     }
@@ -161,6 +175,20 @@ function readEmojiUnicodeFromJson(){
     }
   };
   $.getJSON(url,callBack);
-
 }
+
+function changeToExpressionSerialNumber(imgSrc) {
+	var indexOf_ = imgSrc.indexOf('_');
+	if (indexOf_!= -1) {
+		imgSrc = imgSrc.slice(indexOf_+1,imgSrc.length-4);
+		var newLen = imgSrc.length;
+		if (newLen==1) {
+			imgSrc = "" + "00" + imgSrc;
+		} else if (newLen==2) {
+			imgSrc = "" + "0" + imgSrc;
+		}
+	}
+	return imgSrc;
+}
+
 
