@@ -41,10 +41,7 @@
   height: 100%;
   cursor: pointer;
 }
-.expression-img:hover{
-  z-index: 5;
-  border: 1px solid aquamarine;
-}
+
 
 .cell-wrap , .emoji-cell-wrap{
   position: absolute;
@@ -79,6 +76,10 @@
   display: inline-block;
 }
 .qq-page-dot {
+
+}
+.current-dot{
+	box-shadow: 1px 1px 4px 4px darkseagreen;
 
 }
 /*表情面板 底部 结束*/
